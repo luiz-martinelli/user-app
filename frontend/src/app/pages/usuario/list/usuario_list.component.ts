@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { take } from 'rxjs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { UserService } from '../../../services/user_service';
@@ -45,7 +46,9 @@ export class UsuarioListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe((params) => {
+    this.activatedRoute.params.pipe(
+      take(1)
+    ).subscribe((params) => {
       this.paginaAtual = params['page'] ? parseInt(params['page'], 10) : 0;
       this.carregarUsuarios(this.paginaAtual, this.itemsPorPagina);
     });
@@ -54,7 +57,7 @@ export class UsuarioListComponent implements OnInit {
   carregarUsuarios(pagina: number, limite: number) {
     this.usuarioService.getItems(pagina, limite).subscribe((response: any) => {
       this.usuarios = response.content; 
-      this.totalUsuarios = response.totalElements;
+      this.totalUsuarios = response.page.totalElements;
     });
   }  
 

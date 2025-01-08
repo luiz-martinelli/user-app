@@ -26,4 +26,5 @@ export class UserService {
   updateItem(item: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/usuarios`, item);
   }
+  
 }

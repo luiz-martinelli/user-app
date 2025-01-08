@@ -1,0 +1,13 @@
+<div class="container-base">
+    <div class="card">
+      <h2>Carregar Token</h2>
+      <div class="form">
+        <button mat-raised-button color="primary" (click)="buscarToken()" [disabled]="isLoading">
+          <mat-icon *ngIf="!isLoading">vpn_key</mat-icon>
+          <mat-spinner *ngIf="isLoading" diameter="24"></mat-spinner>
+          {{ isLoading ? 'Carregando...' : 'Buscar Token' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  

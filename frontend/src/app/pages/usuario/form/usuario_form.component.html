@@ -51,17 +51,16 @@
         </div>
 
         <div class="form-group">
-          <label for="senha">Senha</label>
+          <label for="senha">
+            {{ usuarioData ? 'Redefinir senha (se necessário)' : 'Senha' }}
+          </label>
           <input
             type="password"
             id="senha"
             formControlName="senha"
             class="form-control"
-            [class.is-invalid]="hasError('senha', 'required') || hasError('senha', 'minlength')"
+            [class.is-invalid]="hasError('senha', 'minlength') && !usuarioData"
           />
-          <div *ngIf="hasError('senha', 'required')" class="error">
-            Senha é obrigatória.
-          </div>
           <div *ngIf="hasError('senha', 'minlength')" class="error">
             Senha deve ter pelo menos 6 caracteres.
           </div>
@@ -74,10 +73,9 @@
         <mat-icon>cancel</mat-icon> Cancelar
       </button>
       <button mat-raised-button class="custom-green-button" [disabled]="usuarioForm.invalid" (click)="onSubmit()">
-        <mat-icon>{{ usuarioData ? 'edit' : 'save' }}</mat-icon>
+        <mat-icon>{{ usuarioData ? 'save' : 'save' }}</mat-icon>
         {{ usuarioData ? 'Salvar' : 'Cadastrar' }}
       </button>
-      
     </div>
   </div>
 </div>

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UsuarioService {
@@ -23,7 +24,7 @@ public class UsuarioService {
     }
 
     public Integer createUsuario(Usuario usuario) {
-        validateEmailUniqueness(usuario.getEmail());
+        validateEmailUniqueness(usuario.getEmail(), null);
         Usuario novoUsuario = new Usuario();
         novoUsuario.setEmail(usuario.getEmail());
         novoUsuario.setNome(usuario.getNome());
@@ -33,17 +34,29 @@ public class UsuarioService {
     }
 
     public void updateUsuario(Usuario usuario) {
-        usuarioRepository.save(usuario);
+        validateEmailUniqueness(usuario.getEmail(), usuario.getId());
+        Usuario usuarioSalvo = usuarioRepository.findById(usuario.getId()).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        usuarioSalvo.setNome(usuario.getNome());
+        usuarioSalvo.setEmail(usuario.getEmail());
+        if (usuario.getSenha() != null && !usuario.getSenha().isBlank() && !Objects.equals(usuarioSalvo.getSenha(), usuario.getSenha())) {
+            usuarioSalvo.setSenha(passwordEncoderService.hashPassword(usuario.getSenha()));
+        }
+        usuarioRepository.save(usuarioSalvo);
     }
+
+
 
     public void deleteUsuario(Integer id) {
         usuarioRepository.deleteById(id);
     }
 
-    private void validateEmailUniqueness(String email) {
+    private void validateEmailUniqueness(String email, Integer currentUserId) {
         List<Usuario> usuarios = usuarioRepository.findByEmail(email);
-        if (!usuarios.isEmpty()) {
-            throw new RuntimeException("O e-mail já está cadastrado em outro usuário.");
+        for (Usuario usuario : usuarios) {
+            if (!usuario.getId().equals(currentUserId)) {
+                throw new RuntimeException("O e-mail já está cadastrado em outro usuário.");
+            }
         }
     }
+
 }

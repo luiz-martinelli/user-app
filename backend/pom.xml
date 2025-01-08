@@ -13,7 +13,6 @@
 	<modules>
 		<module>services/app</module>
 		<module>libraries/crud-library</module>
-		<module>libraries/security-library</module>
 	</modules>
 
 	<properties>

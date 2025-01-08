@@ -32,7 +32,7 @@ export class UsuarioFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder, 
     private router: Router,
-     private usuarioService: UserService,
+    private usuarioService: UserService,
     private snackBar: MatSnackBar) {
     this.usuarioForm = this.formBuilder.group({
       id: [null],
@@ -45,31 +45,43 @@ export class UsuarioFormComponent implements OnInit {
   ngOnInit(): void {
     if (history.state.usuario) {
       this.usuarioData = history.state.usuario;
-      this.usuarioForm.patchValue(this.usuarioData);
       this.usuarioForm.get('id')?.setValue(this.usuarioData.id);
+      this.usuarioForm.get('nome')?.setValue(this.usuarioData.nome);
+      this.usuarioForm.get('email')?.setValue(this.usuarioData.email);
+      this.usuarioForm.get('senha')?.setValidators([Validators.minLength(6)]);
+    } else {
+      this.usuarioForm.get('senha')?.setValidators([Validators.required, Validators.minLength(6)]);
     }
+    this.usuarioForm.get('senha')?.updateValueAndValidity();
   }
+  
 
   onCancel(): void {
     this.usuarioForm.reset();
-    this.router.navigate(['']);
+    this.router.navigate(['/usuarios']);
   }
 
   onSubmit(): void {
     if (this.usuarioForm.valid) {
+      const formValue = { ...this.usuarioForm.value };
+      if (this.usuarioData && !formValue.senha) {
+        delete formValue.senha;
+        formValue.senha = this.usuarioData.senha;
+      }
+  
       if (this.usuarioData) {
-        this.usuarioService.updateItem(this.usuarioForm.value).subscribe({
+        this.usuarioService.updateItem(formValue).subscribe({
           next: () => {
-            this.showSnackBar('Usuário atualizado com sucesso!')
-            this.router.navigate(['']);
+            this.showSnackBar('Usuário atualizado com sucesso!');
+            this.router.navigate(['/usuarios']);
           },
           error: (err) => this.handleError(err),
         });
       } else {
-        this.usuarioService.createItem(this.usuarioForm.value).subscribe({
+        this.usuarioService.createItem(formValue).subscribe({
           next: () => {
-            this.showSnackBar('Usuário adicionado com sucesso!')
-            this.router.navigate(['']);
+            this.showSnackBar('Usuário adicionado com sucesso!');
+            this.router.navigate(['/usuarios']);
           },
           error: (err) => this.handleError(err),
         });
