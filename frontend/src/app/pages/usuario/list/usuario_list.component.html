@@ -1,0 +1,53 @@
+<div class="container-base">
+  <div class="navbar">
+    <div class="navbar-logo"><mat-icon>person</mat-icon></div>
+    <div class="navbar-links">
+      <button mat-raised-button color="primary" (click)="irParaCadastro()"><mat-icon>add</mat-icon> Novo usuário</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Usuários</h2>
+    <mat-table [dataSource]="usuarios" class="mat-elevation-z8">
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> Código </mat-header-cell>
+        <mat-cell *matCellDef="let usuario"> {{ usuario.id }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+        <mat-cell *matCellDef="let usuario"> {{ usuario.nome }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
+        <mat-cell *matCellDef="let usuario"> {{ usuario.email }} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <mat-header-cell *matHeaderCellDef class="mat-column-acoes"> Ações </mat-header-cell>
+        <mat-cell *matCellDef="let usuario" class="mat-column-acoes">
+          <button mat-icon-button color="primary" (click)="irParaEdicao(usuario)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="excluirUsuario(usuario.id)" class="delete-button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+      
+
+      <mat-header-row *matHeaderRowDef="['id', 'nome', 'email', 'acoes']"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['id', 'nome', 'email', 'acoes'];"></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      [hidePageSize]="hidePageSize"
+      [length]="totalUsuarios"
+      [pageSize]="itemsPorPagina"
+      [pageSizeOptions]="[5, 10, 25]"
+      (page)="trocarPagina($event)">
+    </mat-paginator>
+  </div>
+</div>
+

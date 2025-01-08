@@ -1,0 +1,83 @@
+<div class="container-base">
+  <div class="navbar">
+    <div class="navbar-logo"><mat-icon>person</mat-icon></div>
+  </div>
+
+  <div class="card">
+    <div class="card-content">
+      <h2>{{ usuarioData ? 'Editar' : 'Cadastrar' }}</h2>
+      <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="form">
+
+        <div *ngIf="usuarioData" class="form-group">
+          <label for="id">Código</label>
+          <input
+            type="text"
+            id="id"
+            formControlName="id"
+            class="form-control"
+            [readonly]="true"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input
+            type="text"
+            id="nome"
+            formControlName="nome"
+            class="form-control"
+            [class.is-invalid]="hasError('nome', 'required')"
+          />
+          <div *ngIf="hasError('nome', 'required')" class="error">
+            Nome é obrigatório.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="form-control"
+            [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+          />
+          <div *ngIf="hasError('email', 'required')" class="error">
+            E-mail é obrigatório.
+          </div>
+          <div *ngIf="hasError('email', 'email')" class="error">
+            E-mail inválido.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input
+            type="password"
+            id="senha"
+            formControlName="senha"
+            class="form-control"
+            [class.is-invalid]="hasError('senha', 'required') || hasError('senha', 'minlength')"
+          />
+          <div *ngIf="hasError('senha', 'required')" class="error">
+            Senha é obrigatória.
+          </div>
+          <div *ngIf="hasError('senha', 'minlength')" class="error">
+            Senha deve ter pelo menos 6 caracteres.
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="card-actions">
+      <button mat-raised-button color="warn" (click)="onCancel()">
+        <mat-icon>cancel</mat-icon> Cancelar
+      </button>
+      <button mat-raised-button class="custom-green-button" [disabled]="usuarioForm.invalid" (click)="onSubmit()">
+        <mat-icon>{{ usuarioData ? 'edit' : 'save' }}</mat-icon>
+        {{ usuarioData ? 'Salvar' : 'Cadastrar' }}
+      </button>
+      
+    </div>
+  </div>
+</div>
